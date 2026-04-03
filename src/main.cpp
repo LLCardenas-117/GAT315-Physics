@@ -9,44 +9,15 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 
 #include "raylib.h"
 #include "raymath.h"
-#include "resource_dir.h"	// utility header for SearchAndSetResourceDir
+#include "resource_dir.h" // utility header for SearchAndSetResourceDir
 
-#include <vector>
-
-struct Body {
-	Vector2 acceleration;
-	Vector2 position;
-	Vector2 velocity;
-	float mass;
-	float size;
-	float restitution;
-};
-
-float GetRandomFloat() {
-	return GetRandomValue(0, 10000) / (float)10000;
-}
-
-void AddForce(Body& body, Vector2 force) {
-	body.acceleration += force / body.mass;
-}
-
-void ExplicitEuler(Body& body, float deltaTime) {
-	body.position += body.velocity * deltaTime;
-	body.velocity += body.acceleration * deltaTime;
-}
-
-void SemiImplicitEuler(Body& body, float deltaTime) {
-	body.velocity += body.acceleration * deltaTime;
-	body.position += body.velocity * deltaTime;
-}
-
-Vector2 gravity{ 0, 9.81f };
+#include "../Body.h"
+#include "../World.h"
+#include "../Random.h"
 
 int main ()
 {
-	std::vector<Body> bodies;
-	bodies.reserve(1000);
-
+	World world;
 	SetRandomSeed(5);
 
 	// Tell the window to use vsync and work on high DPI displays
@@ -86,66 +57,13 @@ int main ()
 			body.restitution = 0.5f + (GetRandomFloat() * 0.5f);
 			body.mass = 1.0f;
 
-			bodies.push_back(body);
+			world.AddBody(body);
 		}
 
 		// UPDATE
 		DrawCircleV(currentMousePosition, 5, SKYBLUE);
 
-		for (auto& body : bodies) body.acceleration = Vector2{ 0, 0 };
-		for (auto& body : bodies) AddForce(body, (gravity * 100.0f));
-
-		// Attract
-		if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
-			for (auto& body : bodies) {
-				Vector2 direction = currentMousePosition - body.position;
-				if (Vector2Length(direction) <= 100.0f) {
-					Vector2 force = Vector2Normalize(direction) * 10000.0f;
-					AddForce(body, force);
-				}
-			}
-
-			DrawCircleLinesV(currentMousePosition, 100, WHITE);
-		}
-
-		// Repel
-		if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE)) {
-			for (auto& body : bodies) {
-				Vector2 direction = body.position - currentMousePosition;
-				if (Vector2Length(direction) <= 100.0f) {
-					Vector2 force = Vector2Normalize(direction) * 10000.0f;
-					AddForce(body, force);
-				}
-			}
-
-			DrawCircleLinesV(currentMousePosition, 100, WHITE);
-		}
-
-		for (auto& body : bodies) SemiImplicitEuler(body, deltaTime);
-
-		// Collision
-		for (auto& body : bodies) {
-
-			if (body.position.x + body.size > GetScreenWidth()) {
-				body.position.x = GetScreenWidth() - body.size;
-				body.velocity.x *= -body.restitution;
-			}
-
-			if (body.position.x + body.size < 0) {
-				body.position.x = 0 + body.size;
-				body.velocity.x *= -body.restitution;
-			}
-
-			if (body.position.y + body.size > GetScreenHeight()) {
-				body.position.y = GetScreenHeight() - body.size;
-				body.velocity.y *= -body.restitution;
-			}
-
-			/*if (body.position.y + body.size < 0) {
-				body.position.y = 0 + body.size;
-				body.velocity.y *= -body.restitution;
-			}*/
-		}
+		world.Step(deltaTime);
 
 		// DRAW
 		BeginDrawing();
@@ -154,14 +72,13 @@ int main ()
 		ClearBackground(BLACK);
 
 		// draw some text using the default font
-		DrawText("Physics Engine", 200,200,20,WHITE);
+		DrawText("Physics Engine", 200, 200, 20, WHITE);
 
 		// draw our texture to the screen
 		DrawTexture(wabbit, 400, 200, WHITE);
 
-		for (const auto& body : bodies) {
-			DrawCircleV(body.position, body.size, PINK);
-		}
+		// Add world draw method here
+		world.Draw();
 		
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();
