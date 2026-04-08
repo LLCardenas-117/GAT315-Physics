@@ -13,11 +13,11 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 
 #include <string>
 
-#include "../Body.h"
-#include "../World.h"
-#include "../Random.h"
+#include "Body.h"
+#include "World.h"
+#include "Random.h"
 #include "point_effector.h"
-#include "../gravitation_effector.h"
+#include "gravitation_effector.h"
 
 int main ()
 {

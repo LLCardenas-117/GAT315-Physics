@@ -1,4 +1,4 @@
-#include "../Collision.h"
+#include "Collision.h"
 
 bool Intersects(const Body& bodyA, const Body& bodyB) {
 	float distance = Vector2Distance(bodyA.position, bodyB.position);

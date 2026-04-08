@@ -18,28 +18,28 @@
     <ClInclude Include="include\resource_dir.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Body.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="World.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Random.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Integrator.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Effector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\point_effector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gravitation_effector.h">
+    <ClInclude Include="src\Collision.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Collision.h">
+    <ClInclude Include="src\gravitation_effector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Random.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\World.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Body.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Integrator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -47,19 +47,19 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Body.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="World.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\point_effector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gravitation_effector.cpp">
+    <ClCompile Include="src\World.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="collision.cpp">
+    <ClCompile Include="src\Body.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\collision.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gravitation_effector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
