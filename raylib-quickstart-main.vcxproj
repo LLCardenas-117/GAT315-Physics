@@ -302,13 +302,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Body.h" />
+    <ClInclude Include="Collision.h" />
+    <ClInclude Include="gravitation_effector.h" />
     <ClInclude Include="include\resource_dir.h" />
+    <ClInclude Include="Integrator.h" />
     <ClInclude Include="Random.h" />
+    <ClInclude Include="src\Effector.h" />
+    <ClInclude Include="src\point_effector.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Body.cpp" />
+    <ClCompile Include="collision.cpp" />
+    <ClCompile Include="gravitation_effector.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\point_effector.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>

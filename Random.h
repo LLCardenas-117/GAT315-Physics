@@ -11,5 +11,6 @@ inline float GetRandomFloat(float max) {
 }
 
 inline float GetRandomFloat(float min, float max) {
+	if (min > max) std::swap(min, max);
 	return GetRandomValue(min, max) / max;
 }

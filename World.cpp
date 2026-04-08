@@ -1,7 +1,6 @@
 #include "raylib.h"
 #include "World.h"
-
-// I had AI show me this solution since I got stuck (the world constructor)
+#include "Effector.h"
 
 World::World() {
 	bodies.reserve(1000);
@@ -10,11 +9,14 @@ World::World() {
 void World::Step(float deltaTime) {
 	Vector2 currentMousePosition = GetMousePosition();
 
+	//for (auto& body : bodies) body.acceleration = gravity * body.gravityScale * 100.0f;
 	for (auto& body : bodies) body.acceleration = Vector2{ 0, 0 };
-	for (auto& body : bodies) body.AddForce(gravity * 100.0f);
+	for (auto& body : bodies) body.AddForce(gravity * body.gravityScale * 100.0f, ForceMode::Acceleration);
+	//for (auto& body : bodies) body.AddForce(gravity * 100.0f);
 
 	// Attract
-	if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+	for (auto& effector : effectors) effector->Apply(bodies);
+	/*if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
 		for (auto& body : bodies) {
 			Vector2 direction = currentMousePosition - body.position;
 			if (Vector2Length(direction) <= 100.0f) {
@@ -24,7 +26,7 @@ void World::Step(float deltaTime) {
 		}
 
 		DrawCircleLinesV(currentMousePosition, 100, WHITE);
-	}
+	}*/
 
 	// Repel
 	if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE)) {
@@ -39,7 +41,35 @@ void World::Step(float deltaTime) {
 		DrawCircleLinesV(currentMousePosition, 100, WHITE);
 	}
 
-	for (auto& body : bodies) body.Step(deltaTime);
+	for (auto& body : bodies) if(body.bodyType == BodyType::Dynamic) body.Step(deltaTime);
+
+	UpdateCollision();
+
+	// force effectors
+	for (auto& effector : effectors) effector->Apply(bodies);
+}
+
+void World::Draw() {
+	//bodies.reserve(1000);
+	for (auto& body : bodies) body.Draw();
+	for (auto& effector : effectors) effector->Draw();
+
+}
+
+void World::AddBody(const Body& body) {
+	bodies.push_back(body);
+}
+
+void World::AddEffector(Effector* effector)
+{
+	effectors.push_back(effector);
+}
+
+void World::UpdateCollision()
+{
+	contacts.clear();
+	CreateContacts(bodies, contacts);
+	SeparateContacts(contacts);
 
 	// Collision
 	for (auto& body : bodies) {
@@ -63,13 +93,4 @@ void World::Step(float deltaTime) {
 			body.velocity.y *= -body.restitution;
 		}*/
 	}
-}
-
-void World::Draw() {
-	//bodies.reserve(1000);
-	for (auto& body : bodies) body.Draw();
-}
-
-void World::AddBody(const Body& body) {
-	bodies.push_back(body);
 }

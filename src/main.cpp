@@ -11,13 +11,20 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include "raymath.h"
 #include "resource_dir.h" // utility header for SearchAndSetResourceDir
 
+#include <string>
+
 #include "../Body.h"
 #include "../World.h"
 #include "../Random.h"
+#include "point_effector.h"
+#include "../gravitation_effector.h"
 
 int main ()
 {
 	World world;
+	//world.AddEffector(new PointEffector(Vector2{ 200, 200 }, 100, 30000.0f));
+	//world.AddEffector(new PointEffector(Vector2{ 600, 600 }, 100, -30000.0f));
+	//world.AddEffector(new GravitationalEffector(10000.0f));
 	SetRandomSeed(5);
 
 	// Tell the window to use vsync and work on high DPI displays
@@ -31,6 +38,12 @@ int main ()
 
 	// Load a texture from the resources directory
 	Texture wabbit = LoadTexture("wabbit_alpha.png");
+
+	SetTargetFPS(60);
+
+	float timeAccum = 0.0f;
+	float fixedTimeStep = 1.0f / 60.0f; // 0.016 * 60.0 = 1.0
+
 	
 	// game loop
 	while (!WindowShouldClose())		// run the loop until the user presses ESCAPE or presses the Close button on the window
@@ -44,6 +57,8 @@ int main ()
 			Body body;
 			body.position = currentMousePosition;
 
+			body.bodyType = (IsKeyDown(KEY_LEFT_ALT)) ? BodyType::Static : BodyType::Dynamic;
+
 			float angle = GetRandomFloat() * (2 * PI);
 
 			// Get random unit circle
@@ -51,11 +66,15 @@ int main ()
 			direction.x = cosf(angle);
 			direction.y = sinf(angle);
 
-			body.velocity = direction * (50.0f + (GetRandomFloat() * 300));
-			body.acceleration = Vector2{ 0, 0 };
+			//body.AddForce(direction * (50.0f + (GetRandomFloat() * 300)), ForceMode::VelocityChange);
+
 			body.size = 5.0f + (GetRandomFloat() * 20.0f);
 			body.restitution = 0.5f + (GetRandomFloat() * 0.5f);
-			body.mass = 1.0f;
+			body.mass = body.size;
+			body.inverseMass = (body.bodyType == BodyType::Static) ? 0 : 1.0f / body.mass;
+			//body.gravityScale = 0.5f;
+			body.gravityScale = 0.0f;
+			body.damping = 0.25f;
 
 			world.AddBody(body);
 		}
@@ -63,7 +82,11 @@ int main ()
 		// UPDATE
 		DrawCircleV(currentMousePosition, 5, SKYBLUE);
 
-		world.Step(deltaTime);
+		timeAccum += deltaTime;
+		while (timeAccum > fixedTimeStep) {
+			world.Step(fixedTimeStep);
+			timeAccum -= fixedTimeStep;
+		}
 
 		// DRAW
 		BeginDrawing();
@@ -71,11 +94,15 @@ int main ()
 		// Setup the back buffer for drawing (clear color and depth buffers)
 		ClearBackground(BLACK);
 
+		std::string fpsText = "FPS: ";
+
+		fpsText += std::to_string(GetFPS());
+
 		// draw some text using the default font
-		DrawText("Physics Engine", 200, 200, 20, WHITE);
+		DrawText(fpsText.c_str(), 100, 100, 20, WHITE);
 
 		// draw our texture to the screen
-		DrawTexture(wabbit, 400, 200, WHITE);
+		//DrawTexture(wabbit, 400, 200, WHITE);
 
 		// Add world draw method here
 		world.Draw();
