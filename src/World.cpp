@@ -16,7 +16,7 @@ void World::Step(float deltaTime) {
 
 	// Attract
 	for (auto& effector : effectors) effector->Apply(bodies);
-	/*if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+	if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
 		for (auto& body : bodies) {
 			Vector2 direction = currentMousePosition - body.position;
 			if (Vector2Length(direction) <= 100.0f) {
@@ -26,7 +26,7 @@ void World::Step(float deltaTime) {
 		}
 
 		DrawCircleLinesV(currentMousePosition, 100, WHITE);
-	}*/
+	}
 
 	// Repel
 	if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE)) {
@@ -70,6 +70,7 @@ void World::UpdateCollision()
 	contacts.clear();
 	CreateContacts(bodies, contacts);
 	SeparateContacts(contacts);
+	ResolveContacts(contacts);
 
 	// Collision
 	for (auto& body : bodies) {
@@ -88,9 +89,9 @@ void World::UpdateCollision()
 			body.velocity.y *= -body.restitution;
 		}
 
-		/*if (body.position.y + body.size < 0) {
+		if (body.position.y + body.size < 0) {
 			body.position.y = 0 + body.size;
 			body.velocity.y *= -body.restitution;
-		}*/
+		}
 	}
 }

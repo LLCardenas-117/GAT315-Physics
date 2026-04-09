@@ -24,7 +24,7 @@ public:
 	float mass = 1.0f;
 	float inverseMass = 1.0f; // 1 / mass
 	float size = 1.0f;
-	float restitution = 1.0f;
+	float restitution = 0.5f;
 	float gravityScale = 1.0f;
 	float damping = 0.0f;
 

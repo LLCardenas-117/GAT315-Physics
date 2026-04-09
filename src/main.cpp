@@ -52,6 +52,8 @@ int main ()
 		Vector2 currentMousePosition = GetMousePosition();
 
 		if (IsKeyDown(KEY_LEFT_SHIFT)) deltaTime = 0.0f;
+		else if (IsKeyDown(KEY_RIGHT_CONTROL)) deltaTime = GetFrameTime() / 2.0f;
+		else if (IsKeyDown(KEY_RIGHT_SHIFT)) deltaTime = GetFrameTime() * 20.0f;
 
 		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || (IsKeyDown(KEY_LEFT_CONTROL) && IsMouseButtonDown(MOUSE_BUTTON_LEFT)) ) {
 			Body body;
@@ -66,7 +68,7 @@ int main ()
 			direction.x = cosf(angle);
 			direction.y = sinf(angle);
 
-			//body.AddForce(direction * (50.0f + (GetRandomFloat() * 300)), ForceMode::VelocityChange);
+			body.AddForce(direction * (50.0f + (GetRandomFloat() * 300)), ForceMode::VelocityChange);
 
 			body.size = 5.0f + (GetRandomFloat() * 20.0f);
 			body.restitution = 0.5f + (GetRandomFloat() * 0.5f);

@@ -8,8 +8,9 @@ void Body::Step(float deltaTime) {
 }
 
 void Body::Draw() {
-	DrawCircleV(position, size, PINK);
-	DrawCircleLinesV(position, size, MAGENTA);
+	if (bodyType == BodyType::Static) DrawCircleV(position, size, RED);
+	else DrawCircleV(position, size, BLUE);
+	DrawCircleLinesV(position, size, PINK);
 }
 
 void Body::AddForce(Vector2 force, ForceMode forceMode) {
