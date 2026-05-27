@@ -167,7 +167,7 @@ void GuiPhysics(GuiPhysicsState *state)
         GuiGroupBox((Rectangle){ state->anchor01.x + 8, state->anchor01.y + 392, 296, 136 }, "EFFECTOR");
         GuiSliderBar((Rectangle){ state->anchor01.x + 80, state->anchor01.y + 448, 184, 16 }, "SIZE", GUI_TEXT(state->EffectorSizeValue), &state->EffectorSizeValue, 0, 5);
         GuiSlider((Rectangle){ state->anchor01.x + 80, state->anchor01.y + 472, 184, 16 }, "FORCE", GUI_TEXT(state->EffectorForceValue), &state->EffectorForceValue, -10, 10);
-        GuiSliderBar((Rectangle){ state->anchor01.x + 80, state->anchor01.y + 496, 184, 16 }, "ANGLE/DRAG", GUI_TEXT(state->EffectorAngleValue), &state->EffectorAngleValue, 0, 5);
+        GuiSliderBar((Rectangle){ state->anchor01.x + 80, state->anchor01.y + 496, 184, 16 }, "ANGLE/DRAG", GUI_TEXT(state->EffectorAngleValue), &state->EffectorAngleValue, 0, 10);
         GuiToggle((Rectangle){ state->anchor01.x + 32, state->anchor01.y + 624, 240, 24 }, "SIMULATE", &state->SimulateActive);
         GuiSlider((Rectangle){ state->anchor01.x + 80, state->anchor01.y + 568, 184, 16 }, "GRAVITY", GUI_TEXT(state->GravityValue), &state->GravityValue, -20, 20);
         GuiSliderBar((Rectangle){ state->anchor01.x + 80, state->anchor01.y + 544, 184, 16 }, "FPS", GUI_TEXT(state->FPSValue), &state->FPSValue, 0, 100);
