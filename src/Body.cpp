@@ -5,6 +5,7 @@ void Body::Step(float deltaTime) {
 	velocity += acceleration * deltaTime;
 	velocity *= (1.0f / (1.0f + damping * deltaTime));
 	position += velocity * deltaTime;
+	//gravityScale = originalGravityScale;
 }
 
 void Body::Draw() {

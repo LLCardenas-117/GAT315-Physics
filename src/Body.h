@@ -1,11 +1,10 @@
 #pragma once
 #include "raymath.h"
 
-
 enum class BodyType {
-	Static, 
+	Dynamic,
 	Kinematic,
-	Dynamic
+	Static
 };
 
 enum class ForceMode {
@@ -32,4 +31,7 @@ public:
 	void Step(float deltaTime);
 	void Draw();
 	void AddForce(Vector2 force, ForceMode forceMode = ForceMode::Force);
+
+protected:
+	float originalGravityScale = gravityScale;
 };
