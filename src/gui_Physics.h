@@ -126,10 +126,10 @@ GuiPhysicsState InitGuiPhysics(void)
     state.BodyDampingValue = 0.1f;
     state.BodyTypeEditMode = false;
     state.BodyTypeActive = 0;
-    state.SpringStiffnessValue = 0.0f;
-    state.SpringDampingValue = 0.0f;
-    state.SpringAutoLengthChecked = false;
-    state.SpringLengthValue = 0.0f;
+    state.SpringStiffnessValue = 15.0f;
+    state.SpringDampingValue = 2.0f;
+    state.SpringAutoLengthChecked = true;
+    state.SpringLengthValue = 2.0f;
     state.EffectorTypeEditMode = false;
     state.EffectorTypeActive = 0;
     state.EffectorSizeValue = 1.0f;
@@ -139,7 +139,7 @@ GuiPhysicsState InitGuiPhysics(void)
     state.GravityValue = -9.81f;
     state.FPSValue = 60.0f;
     state.BodyVelocityValue = 40.0f;
-    state.SpringMultiplierValue = 0.0f;
+    state.SpringMultiplierValue = 9.78f;
     state.WindowBox023Active = true;
 
     // Custom variables initialization
@@ -155,7 +155,7 @@ void GuiPhysics(GuiPhysicsState *state)
     {
         state->PhysicsPanelActive = !GuiWindowBox((Rectangle){ state->anchor01.x + 0, state->anchor01.y + 0, 304, 664 }, "PHYSICS CONTROLS");
         GuiSliderBar((Rectangle){ state->anchor01.x + 80, state->anchor01.y + 112, 184, 16 }, "MASS", GUI_TEXT(state->BodyMassValue), &state->BodyMassValue, 1, 20);
-        GuiSliderBar((Rectangle){ state->anchor01.x + 80, state->anchor01.y + 88, 184, 16 }, "SIZE", GUI_TEXT(state->BodySizeValue), &state->BodySizeValue, 0, 5);
+        GuiSliderBar((Rectangle){ state->anchor01.x + 80, state->anchor01.y + 88, 184, 16 }, "SIZE", GUI_TEXT(state->BodySizeValue), &state->BodySizeValue, 0.1f, 5);
         GuiSliderBar((Rectangle){ state->anchor01.x + 80, state->anchor01.y + 136, 184, 16 }, "GRAVITY", GUI_TEXT(state->BodyGravityValue), &state->BodyGravityValue, 0, 20);
         GuiSliderBar((Rectangle){ state->anchor01.x + 80, state->anchor01.y + 160, 184, 16 }, "BOUNCE", GUI_TEXT(state->BodyRestitutionValue), &state->BodyRestitutionValue, 0, 100);
         GuiSliderBar((Rectangle){ state->anchor01.x + 80, state->anchor01.y + 184, 184, 16 }, "DAMPING", GUI_TEXT(state->BodyDampingValue), &state->BodyDampingValue, 0, 100);

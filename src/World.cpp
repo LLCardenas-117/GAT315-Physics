@@ -1,8 +1,11 @@
 #include "raylib.h"
 #include "World.h"
 #include "Effector.h"
+#include "Spring.h"
 
 Vector2 World::gravity = { 0, 9.8f };
+
+float World::springMultiplier = 1.0f;
 
 Body* World::GetBodyIntersect(Vector2 position)
 {
@@ -24,6 +27,9 @@ void World::Step(float deltaTime) {
 	// force effectors
 	for (auto& effector : effectors) effector->Apply(bodies);
 
+	// force springs
+	for (auto& spring : springs) spring->Apply(springMultiplier);
+
 	// integrator (acceleration->velocity->position)
 	for (auto& body : bodies) if (body.bodyType == BodyType::Dynamic) body.Step(deltaTime);
 
@@ -34,8 +40,23 @@ void World::Step(float deltaTime) {
 }
 
 void World::Draw() {
+	// Vertical lines
+	DrawLineV(Vector2{ 0, boundsMin.y }, Vector2{ 0, boundsMax.y }, WHITE);
+	for (float x = 0; x < (boundsMax.x - boundsMin.x) * 0.5f; x += 1) {
+		DrawLineV(Vector2{ +x, boundsMin.y }, Vector2{ +x, boundsMax.y }, GRAY);
+		DrawLineV(Vector2{ -x, boundsMin.y }, Vector2{ -x, boundsMax.y }, GRAY);
+	}
+
+	// Horizontal lines
+	DrawLineV(Vector2{ boundsMin.x, 0 }, Vector2{ boundsMax.x, 0 }, WHITE);
+	for (float y = 0; y < (boundsMax.y - boundsMin.y) * 0.5f; y += 1) {
+		DrawLineV(Vector2{ boundsMin.x, +y }, Vector2{ boundsMax.x, +y }, GRAY);
+		DrawLineV(Vector2{ boundsMin.x, -y }, Vector2{ boundsMax.x, -y }, GRAY);
+	}
+
 	//bodies.reserve(1000);
 	for (auto& effector : effectors) effector->Draw();
+	for (auto& spring : springs) spring->Draw();
 	for (auto& body : bodies) body.Draw();
 
 }
@@ -47,6 +68,12 @@ void World::AddBody(const Body& body) {
 void World::AddEffector(Effector* effector)
 {
 	effectors.push_back(effector);
+}
+
+void World::AddSpring(Body& bodyA, Body& bodyB, float restLength, float stiffness, float damping)
+{
+	Spring* spring = new Spring(&bodyA, &bodyB, restLength, stiffness, damping);
+	springs.push_back(spring);
 }
 
 void World::UpdateCollision()

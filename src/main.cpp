@@ -90,6 +90,8 @@ int main ()
 
 		World::SetGravity(Vector2{ 0.0f, state.GravityValue });
 
+		World::SetSpringMultiplier(state.SpringMultiplierValue);
+
 		bool mouseOverGUI = state.PhysicsPanelActive && CheckCollisionPointRec(currentMousePosition, Rectangle{state.anchor01.x, state.anchor01.y, 304, 664});
 
 		if (!mouseOverGUI) {
@@ -100,11 +102,25 @@ int main ()
 			}
 
 			if (selectedBody) {
-				if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && IsKeyDown(KEY_LEFT_CONTROL)) {
-					Vector2 force = Spring::GetSpringForce(currentWorldMousePosition, selectedBody->position, state.SpringLengthValue, state.SpringStiffnessValue);
-					selectedBody->AddForce(force);
+				if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
+					if (IsKeyDown(KEY_LEFT_CONTROL)) {
+						Vector2 force = Spring::GetSpringForce(currentWorldMousePosition, selectedBody->position, state.SpringLengthValue, state.SpringStiffnessValue);
+						selectedBody->AddForce(force);
 
-					DrawLineV(currentMousePosition, world_camera.WorldToScreen(selectedBody->position), WHITE);
+						DrawLineV(currentMousePosition, world_camera.WorldToScreen(selectedBody->position), WHITE);
+					}
+					else {
+						connectedBody = world.GetBodyIntersect(currentWorldMousePosition);
+					}
+				}
+				else {
+					if (connectedBody) {
+						float distance = (state.SpringAutoLengthChecked) ? Vector2Distance(selectedBody->position, connectedBody->position) : state.SpringLengthValue;
+						world.AddSpring(*selectedBody, *connectedBody, distance, state.SpringStiffnessValue, state.SpringDampingValue);
+					}
+
+					selectedBody = nullptr;
+					connectedBody = nullptr;
 				}
 			}
 
@@ -140,9 +156,10 @@ int main ()
 		world_camera.Begin();
 		world.Draw();
 		if (IsKeyDown(KEY_LEFT_ALT)) DrawCircleLinesV(currentWorldMousePosition, state.EffectorSizeValue, WHITE);
-		else DrawCircleLinesV(currentWorldMousePosition, state.BodySizeValue, WHITE);
+		else DrawCircleLinesV(currentWorldMousePosition, state.BodySizeValue * 0.5f, WHITE);
 
 		if (selectedBody) DrawCircleLinesV(selectedBody->position, selectedBody->size * 1.05f, PINK);
+		if (connectedBody) DrawCircleLinesV(connectedBody->position, connectedBody->size * 1.05f, DARKPURPLE);
 
 		world_camera.End();
 
@@ -185,7 +202,7 @@ void AddBody(World& world, Vector2 currentMousePosition) {
 	body.AddForce(direction * state.BodyVelocityValue, ForceMode::VelocityChange);
 
 	//body.size = 5.0f + (GetRandomFloat() * 20.0f);
-	body.size = state.BodySizeValue;
+	body.size = state.BodySizeValue * 0.5f;
 	//body.restitution = 0.5f + (GetRandomFloat() * 0.5f);
 	body.restitution = state.BodyRestitutionValue;
 	//body.mass = body.size;
@@ -196,6 +213,9 @@ void AddBody(World& world, Vector2 currentMousePosition) {
 	body.gravityScale = state.BodyGravityValue;
 	//body.damping = 0.25f;
 	body.damping = state.BodyDampingValue;
+
+	body.color = ColorFromHSV(GetRandomFloat(360.0f), 1.0f, 1.0f);
+	//body.color = BLUE;
 
 	world.AddBody(body);
 }

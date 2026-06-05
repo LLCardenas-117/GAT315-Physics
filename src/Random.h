@@ -9,7 +9,7 @@ inline float GetRandomFloat() {
 }
 
 inline float GetRandomFloat(float max) {
-	return GetRandomValue(0, max) / max;
+	return GetRandomValue(0, max);
 }
 
 inline float GetRandomFloat(float min, float max) {

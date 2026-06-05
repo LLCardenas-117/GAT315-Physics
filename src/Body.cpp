@@ -9,8 +9,9 @@ void Body::Step(float deltaTime) {
 }
 
 void Body::Draw() {
-	if (bodyType == BodyType::Static) DrawCircleV(position, size, RED);
-	else DrawCircleV(position, size, BLUE);
+	/*if (bodyType == BodyType::Static) DrawCircleV(position, size, RED);
+	else DrawCircleV(position, size, BLUE);*/
+	DrawCircleV(position, size, color);
 	DrawCircleLinesV(position, size, PINK);
 }
 
